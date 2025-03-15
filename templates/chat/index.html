@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ニコニコ風チャットルーム</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>ニコニコ風チャットルーム</h1>
+        
+        <div class="room-list-container">
+            <h2>チャットルーム一覧</h2>
+            
+            {% if rooms %}
+                <ul class="room-list">
+                    {% for room in rooms %}
+                        <li>
+                            <a href="{% url 'room' room.name %}" class="room-link">
+                                {{ room.name }}
+                            </a>
+                            <span class="room-created">{{ room.created_at|date:"Y/m/d H:i" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>チャットルームがまだありません。新しいルームを作成してください。</p>
+            {% endif %}
+        </div>
+        
+        <div class="create-room">
+            <h2>新しいルームを作成</h2>
+            <form id="roomForm">
+                <input type="text" id="roomName" placeholder="ルーム名を入力" required>
+                <button type="submit" class="btn">ルーム作成</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('roomForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const roomName = document.getElementById('roomName').value.trim();
+            if (roomName) {
+                window.location.pathname = '/chat/' + roomName + '/';
+            }
+        });
+    </script>
+</body>
+</html>
