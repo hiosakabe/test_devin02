@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // メッセージを画面に表示する関数
     function displayMessage(data) {
+        // 流れるメッセージを表示
         const messageElement = document.createElement('div');
         messageElement.classList.add('chat-message');
         messageElement.textContent = `${data.username}: ${data.message}`;
@@ -86,6 +87,44 @@ document.addEventListener('DOMContentLoaded', function() {
         messageElement.addEventListener('animationend', function() {
             messageElement.remove();
         });
+        
+        // 履歴パネルにメッセージを追加
+        addToHistory(data);
+    }
+    
+    // 履歴パネルにメッセージを追加する関数
+    function addToHistory(data) {
+        const historyPanel = document.getElementById('chat-history');
+        const historyMessage = document.createElement('div');
+        historyMessage.classList.add('history-message');
+        
+        // タイムスタンプを作成（現在時刻）
+        const timestamp = document.createElement('span');
+        timestamp.classList.add('timestamp');
+        const now = new Date();
+        timestamp.textContent = now.toLocaleTimeString();
+        
+        // ユーザー名とメッセージを作成
+        const username = document.createElement('span');
+        username.classList.add('username');
+        username.textContent = data.username;
+        username.style.color = data.color;
+        
+        const message = document.createElement('span');
+        message.classList.add('message');
+        message.textContent = data.message;
+        
+        // 要素を追加
+        historyMessage.appendChild(timestamp);
+        historyMessage.appendChild(username);
+        historyMessage.appendChild(document.createTextNode(': '));
+        historyMessage.appendChild(message);
+        
+        // 履歴パネルに追加
+        historyPanel.appendChild(historyMessage);
+        
+        // 自動スクロール
+        historyPanel.scrollTop = historyPanel.scrollHeight;
     }
     
     // 画面サイズが変わったときにメッセージの位置を調整
