@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ quiz_id }} | ニコニコ風クイズ</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <h1>クイズルーム: {{ quiz_id }}</h1>
+            <a href="/" class="back-link">ルーム一覧に戻る</a>
+        </header>
+        
+        <div id="chat-screen" class="chat-screen">
+            <!-- ここにメッセージが流れる -->
+        </div>
+        
+        <div class="chat-controls">
+            <div class="username-container">
+                <input type="text" id="username" placeholder="ユーザー名" value="匿名">
+            </div>
+            
+            <div class="message-container">
+                <input type="text" id="chat-message-input" placeholder="メッセージを入力...">
+                <button id="chat-message-submit" class="btn">送信</button>
+            </div>
+            
+            <div class="message-options">
+                <div class="option">
+                    <label for="message-color">色:</label>
+                    <input type="color" id="message-color" value="#000000">
+                </div>
+                
+                <div class="option">
+                    <label for="message-speed">速度:</label>
+                    <select id="message-speed">
+                        <option value="2">遅い</option>
+                        <option value="5" selected>普通</option>
+                        <option value="8">速い</option>
+                    </select>
+                </div>
+                
+                <div class="option">
+                    <label for="message-position">位置:</label>
+                    <select id="message-position">
+                        <option value="top">上</option>
+                        <option value="middle" selected>中央</option>
+                        <option value="bottom">下</option>
+                        <option value="random">ランダム</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/quiz.js"></script>
+    <script>
+        // クイズIDをJavaScriptに渡す
+        const quizId = "{{ quiz_id }}";
+    </script>
+</body>
+</html>

@@ -36,6 +36,14 @@
                 <button type="submit" class="btn">ルーム作成</button>
             </form>
         </div>
+        
+        <div class="create-room-container">
+            <h2>クイズルームを作成</h2>
+            <form id="create-quiz-form">
+                <input type="text" id="quiz-id" placeholder="クイズIDを入力" required>
+                <button type="submit" class="btn">クイズルームを作成</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -44,6 +52,14 @@
             const roomName = document.getElementById('roomName').value.trim();
             if (roomName) {
                 window.location.pathname = '/chat/' + roomName + '/';
+            }
+        });
+        
+        document.getElementById('create-quiz-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const quizId = document.getElementById('quiz-id').value.trim();
+            if (quizId) {
+                window.location.pathname = '/quiz/' + quizId + '/';
             }
         });
     </script>

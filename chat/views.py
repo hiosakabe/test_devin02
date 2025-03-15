@@ -15,3 +15,8 @@ def room(request, room_name):
         'room_name': room_name,
         'room': chat_room
     })
+
+def quiz_room(request, quiz_id):
+    return render(request, 'chat/quiz_room.html', {
+        'quiz_id': quiz_id
+    })
