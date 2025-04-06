@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ホワイトボード作成</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>新しいホワイトボードを作成</h1>
+        
+        <div class="create-room">
+            <form id="whiteboardForm">
+                <input type="text" id="whiteboardName" placeholder="ホワイトボード名を入力" required>
+                <button type="submit" class="btn">作成</button>
+            </form>
+        </div>
+        
+        <div class="back-container">
+            <a href="/" class="back-link">ホームに戻る</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('whiteboardForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const roomName = document.getElementById('whiteboardName').value.trim();
+            if (roomName) {
+                window.location.pathname = '/whiteboard/' + roomName + '/';
+            }
+        });
+    </script>
+</body>
+</html>

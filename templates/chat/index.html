@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ニコニコ風チャットルーム</title>
+    <title>リアルタイムコラボレーションアプリ</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>ニコニコ風チャットルーム</h1>
+        <h1>リアルタイムコラボレーションアプリ</h1>
         
         <div class="room-list-container">
             <h2>チャットルーム一覧</h2>
             
-            {% if rooms %}
+            {% if chat_rooms %}
                 <ul class="room-list">
-                    {% for room in rooms %}
+                    {% for room in chat_rooms %}
                         <li>
                             <a href="{% url 'room' room.name %}" class="room-link">
                                 {{ room.name }}
@@ -30,10 +30,37 @@
         </div>
         
         <div class="create-room">
-            <h2>新しいルームを作成</h2>
+            <h2>新しいチャットルームを作成</h2>
             <form id="roomForm">
                 <input type="text" id="roomName" placeholder="ルーム名を入力" required>
-                <button type="submit" class="btn">ルーム作成</button>
+                <button type="submit" class="btn">チャットルーム作成</button>
+            </form>
+        </div>
+        
+        <div class="room-list-container">
+            <h2>ホワイトボードルーム一覧</h2>
+            
+            {% if whiteboard_rooms %}
+                <ul class="room-list">
+                    {% for room in whiteboard_rooms %}
+                        <li>
+                            <a href="{% url 'whiteboard' room.name %}" class="room-link">
+                                {{ room.name }}
+                            </a>
+                            <span class="room-created">{{ room.created_at|date:"Y/m/d H:i" }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>ホワイトボードルームがまだありません。新しいルームを作成してください。</p>
+            {% endif %}
+        </div>
+        
+        <div class="create-room">
+            <h2>新しいホワイトボードルームを作成</h2>
+            <form id="whiteboardForm">
+                <input type="text" id="whiteboardName" placeholder="ルーム名を入力" required>
+                <button type="submit" class="btn">ホワイトボード作成</button>
             </form>
         </div>
         
@@ -41,7 +68,7 @@
             <h2>クイズルームを作成</h2>
             <form id="create-quiz-form">
                 <input type="text" id="quiz-id" placeholder="クイズIDを入力" required>
-                <button type="submit" class="btn">クイズルームを作成</button>
+                <button type="submit" class="btn">クイズルーム作成</button>
             </form>
         </div>
     </div>
@@ -52,6 +79,14 @@
             const roomName = document.getElementById('roomName').value.trim();
             if (roomName) {
                 window.location.pathname = '/chat/' + roomName + '/';
+            }
+        });
+        
+        document.getElementById('whiteboardForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const roomName = document.getElementById('whiteboardName').value.trim();
+            if (roomName) {
+                window.location.pathname = '/whiteboard/' + roomName + '/';
             }
         });
         

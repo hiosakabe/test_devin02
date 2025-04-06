@@ -22,3 +22,32 @@ class ChatMessage(models.Model):
 
     class Meta:
         ordering = ['timestamp']
+
+class WhiteboardRoom(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Whiteboard: {self.name}'
+
+class WhiteboardElement(models.Model):
+    ELEMENT_TYPES = (
+        ('path', 'Path'),
+        ('line', 'Line'),
+        ('rect', 'Rectangle'),
+        ('circle', 'Circle'),
+        ('text', 'Text'),
+    )
+    
+    room = models.ForeignKey(WhiteboardRoom, related_name='elements', on_delete=models.CASCADE)
+    element_id = models.CharField(max_length=100)  # Unique ID for the element
+    element_type = models.CharField(max_length=20, choices=ELEMENT_TYPES)
+    data = models.JSONField()  # Store coordinates, size, color, etc.
+    username = models.CharField(max_length=100)
+    timestamp = models.DateTimeField(default=timezone.now)
+    
+    def __str__(self):
+        return f'{self.username}: {self.element_type} in {self.room.name}'
+    
+    class Meta:
+        ordering = ['timestamp']

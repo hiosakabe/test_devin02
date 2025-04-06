@@ -257,6 +257,352 @@ input[type="text"] {
     margin-bottom: 3px;
 }
 
+/* ホワイトボードのスタイル */
+.whiteboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.whiteboard-header {
+    background-color: #2196F3;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.whiteboard-header h1 {
+    margin: 0;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.online-users {
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.whiteboard-layout {
+    display: flex;
+    flex: 1;
+    position: relative;
+}
+
+.toolbar {
+    width: 60px;
+    background-color: #f0f0f0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #ddd;
+}
+
+.tool-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.tool-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tool-btn.active {
+    background-color: #2196F3;
+    color: white;
+}
+
+.tool-btn.active svg path {
+    fill: white;
+}
+
+.color-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.color-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+}
+
+.color-preset {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.size-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.action-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.canvas-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+#whiteboard-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    cursor: crosshair;
+}
+
+.user-panel {
+    width: 250px;
+    background-color: #f8f8f8;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.username-container {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-list {
+    padding: 10px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.user-list h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.user-list ul {
+    list-style: none;
+}
+
+.user-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-mini {
+    height: 200px;
+    border-top: 1px solid #ddd;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-mini h3 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+#chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.chat-message-item {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.chat-username {
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.chat-input {
+    display: flex;
+    gap: 5px;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.chat-input button {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 通知のスタイル */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: rgba(33, 150, 243, 0.9);
+    color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: slide-in 0.3s ease-out;
+}
+
+.notification.error {
+    background-color: rgba(244, 67, 54, 0.9);
+}
+
+.notification.fade-out {
+    animation: fade-out 0.5s ease-out forwards;
+}
+
+@keyframes slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* 浮遊する絵文字のスタイル */
+.floating-emoji {
+    position: absolute;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 絵文字コンテナのスタイル */
+.emoji-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    border-radius: 30px;
+    padding: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.emoji-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.emoji-btn:hover {
+    transform: scale(1.2);
+}
+
+/* 画像アップロード関連のスタイル */
+.image-upload {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.image-upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.image-upload-btn:hover {
+    background-color: #1976D2;
+}
+
+.image-preview {
+    margin-top: 10px;
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 4px;
+    display: none;
+}
+
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .message-options {
@@ -281,5 +627,28 @@ input[type="text"] {
         border-left: none;
         border-top: 1px solid #ddd;
         max-height: 30vh;
+    }
+    
+    .whiteboard-layout {
+        flex-direction: column;
+    }
+    
+    .toolbar {
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        overflow-x: auto;
+    }
+    
+    .tool-group, .color-group, .size-group, .action-group {
+        flex-direction: row;
+    }
+    
+    .user-panel {
+        width: 100%;
+        border-left: none;
+        border-top: 1px solid #ddd;
     }
 }

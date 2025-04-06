@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ room_name }} | ホワイトボード</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="whiteboard-container">
+        <header class="whiteboard-header">
+            <h1>{{ room_name }}</h1>
+            <a href="/" class="back-link">ルーム一覧に戻る</a>
+            <div class="online-users">
+                <span id="user-count">0</span> 人が参加中
+            </div>
+        </header>
+        
+        <div class="whiteboard-layout">
+            <div class="toolbar">
+                <div class="tool-group">
+                    <button id="pen-tool" class="tool-btn active" title="ペン">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path>
+                        </svg>
+                    </button>
+                    <button id="line-tool" class="tool-btn" title="直線">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M19 13H5v-2h14v2z"></path>
+                        </svg>
+                    </button>
+                    <button id="rect-tool" class="tool-btn" title="四角形">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"></path>
+                        </svg>
+                    </button>
+                    <button id="circle-tool" class="tool-btn" title="円">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path>
+                        </svg>
+                    </button>
+                    <button id="text-tool" class="tool-btn" title="テキスト">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M5 4v3h5.5v12h3V7H19V4z"></path>
+                        </svg>
+                    </button>
+                    <button id="eraser-tool" class="tool-btn" title="消しゴム">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M15.14 3c-.51 0-1.02.2-1.41.59L2.59 14.73c-.78.77-.78 2.04 0 2.83L5.03 20h7.97l8.41-8.41c.78-.78.78-2.05 0-2.83l-4.85-4.85c-.39-.39-.9-.59-1.41-.59M17 18l-2 2h7v-2"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="color-group">
+                    <input type="color" id="color-picker" value="#000000">
+                    <div class="color-presets">
+                        <button class="color-preset" style="background-color: #000000;" data-color="#000000"></button>
+                        <button class="color-preset" style="background-color: #FF0000;" data-color="#FF0000"></button>
+                        <button class="color-preset" style="background-color: #00FF00;" data-color="#00FF00"></button>
+                        <button class="color-preset" style="background-color: #0000FF;" data-color="#0000FF"></button>
+                        <button class="color-preset" style="background-color: #FFFF00;" data-color="#FFFF00"></button>
+                    </div>
+                </div>
+                
+                <div class="size-group">
+                    <label for="stroke-width">線の太さ:</label>
+                    <input type="range" id="stroke-width" min="1" max="20" value="3">
+                </div>
+                
+                <div class="action-group">
+                    <button id="clear-btn" class="action-btn" title="全消去">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+                        </svg>
+                    </button>
+                    <button id="undo-btn" class="action-btn" title="元に戻す">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"></path>
+                        </svg>
+                    </button>
+                    <button id="redo-btn" class="action-btn" title="やり直し">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"></path>
+                        </svg>
+                    </button>
+                    <button id="image-btn" class="action-btn" title="画像アップロード">
+                        <svg viewBox="0 0 24 24" width="24" height="24">
+                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="canvas-container">
+                <canvas id="whiteboard-canvas"></canvas>
+            </div>
+            
+            <div class="user-panel">
+                <div class="username-container">
+                    <input type="text" id="username" placeholder="ユーザー名" value="匿名">
+                </div>
+                <div class="user-list">
+                    <h3>参加者</h3>
+                    <ul id="active-users">
+                        <!-- ここにアクティブユーザーが表示される -->
+                    </ul>
+                </div>
+                <div class="chat-mini">
+                    <h3>チャット</h3>
+                    <div id="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="メッセージを入力...">
+                        <button id="chat-send">送信</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="emoji-container" class="emoji-container">
+            <!-- 絵文字や効果音のボタンがここに表示される -->
+            <button class="emoji-btn" data-emoji="👍">👍</button>
+            <button class="emoji-btn" data-emoji="👏">👏</button>
+            <button class="emoji-btn" data-emoji="😂">😂</button>
+            <button class="emoji-btn" data-emoji="❤️">❤️</button>
+            <button class="emoji-btn" data-emoji="🎉">🎉</button>
+        </div>
+    </div>
+
+    <script src="/static/js/whiteboard.js"></script>
+    <script>
+        // ルーム名をJavaScriptに渡す
+        const roomName = "{{ room_name }}";
+    </script>
+</body>
+</html>
