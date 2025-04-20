@@ -160,11 +160,13 @@ input[type="text"] {
     animation-name: flow;
     animation-timing-function: linear;
     animation-fill-mode: forwards;
+    right: 0;
+    left: auto;
 }
 
 @keyframes flow {
     from {
-        transform: translateX(100%);
+        transform: translateX(100vw);
     }
     to {
         transform: translateX(-100%);

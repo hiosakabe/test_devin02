@@ -82,6 +82,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const duration = 15 - data.speed; // 10が最速、2が最遅
         messageElement.style.animationDuration = `${duration}s`;
         
+        // 右端から開始するように設定
+        messageElement.style.right = '0';
+        messageElement.style.left = 'auto';
+        
         chatScreen.appendChild(messageElement);
         
         // アニメーション終了後に要素を削除
