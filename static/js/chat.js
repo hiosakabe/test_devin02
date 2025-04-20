@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/chat/' + roomName + '/'
+        protocol + window.location.host + '/ws/chat/' + roomName + '/'
     );
     
     const chatScreen = document.getElementById('chat-screen');
