@@ -1,3 +1,62 @@
+// YouTube API関連の処理
+let player;
+function getYouTubeVideoId(url) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+}
+
+// YouTube APIのコールバック関数（グローバルスコープに配置）
+function onYouTubeIframeAPIReady() {
+    console.log('YouTube API Ready, background type:', typeof backgroundType, backgroundType);
+    console.log('Background URL:', typeof backgroundUrl, backgroundUrl);
+    
+    if (typeof backgroundType !== 'undefined' && backgroundType === 'youtube' && backgroundUrl) {
+        const videoId = getYouTubeVideoId(backgroundUrl);
+        console.log('Video ID:', videoId);
+        
+        if (videoId) {
+            player = new YT.Player('youtube-player', {
+                videoId: videoId,
+                playerVars: {
+                    autoplay: 1,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    modestbranding: 1,
+                    loop: 1,
+                    playlist: videoId,
+                    rel: 0,
+                    showinfo: 0,
+                    mute: 1
+                },
+                events: {
+                    'onReady': function(event) {
+                        event.target.playVideo();
+                        console.log('YouTube player ready and playing');
+                    }
+                }
+            });
+        }
+    }
+}
+
+// CSRFトークン取得用関数
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const chatSocket = new WebSocket(
@@ -158,44 +217,6 @@ document.addEventListener('DOMContentLoaded', function() {
             messageColor.value = '#2196F3'; // 青色
         }
     });
-    
-    // YouTube API関連の処理
-    let player;
-    function onYouTubeIframeAPIReady() {
-        if (backgroundType === 'youtube' && backgroundUrl) {
-            const videoId = getYouTubeVideoId(backgroundUrl);
-            if (videoId) {
-                player = new YT.Player('youtube-player', {
-                    videoId: videoId,
-                    playerVars: {
-                        autoplay: 1,
-                        controls: 0,
-                        disablekb: 1,
-                        fs: 0,
-                        modestbranding: 1,
-                        loop: 1,
-                        playlist: videoId,
-                        rel: 0,
-                        showinfo: 0,
-                        mute: 1
-                    },
-                    events: {
-                        'onReady': onPlayerReady
-                    }
-                });
-            }
-        }
-    }
-
-    function onPlayerReady(event) {
-        event.target.playVideo();
-    }
-
-    function getYouTubeVideoId(url) {
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-        const match = url.match(regExp);
-        return (match && match[2].length === 11) ? match[2] : null;
-    }
 
     // 背景設定ボタンのイベントリスナー
     const setYoutubeBtn = document.getElementById('set-youtube');
@@ -230,19 +251,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
-
-// CSRFトークン取得用関数
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
