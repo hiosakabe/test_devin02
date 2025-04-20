@@ -23,6 +23,11 @@ def room(request, room_name):
             if form.cleaned_data.get('video'):
                 video = form.cleaned_data['video']
                 fs = FileSystemStorage()
+                # Create directory if it doesn't exist
+                import os
+                upload_dir = f'media/videos/{room_name}'
+                os.makedirs(upload_dir, exist_ok=True)
+                
                 filename = fs.save(f'videos/{room_name}/{video.name}', video)
                 chat_room.background_type = 'upload'
                 chat_room.background_url = fs.url(filename)
@@ -31,6 +36,8 @@ def room(request, room_name):
                 chat_room.background_type = 'youtube'
                 chat_room.background_url = form.cleaned_data['youtube_url']
                 chat_room.save()
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = VideoUploadForm()
     

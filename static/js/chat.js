@@ -222,15 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const setYoutubeBtn = document.getElementById('set-youtube');
     const removeBackgroundBtn = document.getElementById('remove-background');
     
-    if (setYoutubeBtn) {
-        setYoutubeBtn.addEventListener('click', function() {
-            const youtubeUrl = document.getElementById('id_youtube_url').value.trim();
-            if (youtubeUrl) {
-                const form = document.querySelector('.video-form');
-                form.submit();
-            }
-        });
-    }
+    // YouTube URL form submission is now handled by the submit button directly
     
     if (removeBackgroundBtn) {
         removeBackgroundBtn.addEventListener('click', function() {
