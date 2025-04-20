@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         messageElement.style.top = `${data.position}%`;
         
         // アニメーション速度を設定（値が大きいほど速い）
-        const duration = 15 - data.speed; // 10が最速、2が最遅
+        const duration = 12 - data.speed; // 10が最速、2が最遅
         messageElement.style.animationDuration = `${duration}s`;
         
         // 右端から開始するように設定
