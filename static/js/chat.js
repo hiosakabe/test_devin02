@@ -158,4 +158,91 @@ document.addEventListener('DOMContentLoaded', function() {
             messageColor.value = '#2196F3'; // 青色
         }
     });
+    
+    // YouTube API関連の処理
+    let player;
+    function onYouTubeIframeAPIReady() {
+        if (backgroundType === 'youtube' && backgroundUrl) {
+            const videoId = getYouTubeVideoId(backgroundUrl);
+            if (videoId) {
+                player = new YT.Player('youtube-player', {
+                    videoId: videoId,
+                    playerVars: {
+                        autoplay: 1,
+                        controls: 0,
+                        disablekb: 1,
+                        fs: 0,
+                        modestbranding: 1,
+                        loop: 1,
+                        playlist: videoId,
+                        rel: 0,
+                        showinfo: 0,
+                        mute: 1
+                    },
+                    events: {
+                        'onReady': onPlayerReady
+                    }
+                });
+            }
+        }
+    }
+
+    function onPlayerReady(event) {
+        event.target.playVideo();
+    }
+
+    function getYouTubeVideoId(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    // 背景設定ボタンのイベントリスナー
+    const setYoutubeBtn = document.getElementById('set-youtube');
+    const removeBackgroundBtn = document.getElementById('remove-background');
+    
+    if (setYoutubeBtn) {
+        setYoutubeBtn.addEventListener('click', function() {
+            const youtubeUrl = document.getElementById('id_youtube_url').value.trim();
+            if (youtubeUrl) {
+                const form = document.querySelector('.video-form');
+                form.submit();
+            }
+        });
+    }
+    
+    if (removeBackgroundBtn) {
+        removeBackgroundBtn.addEventListener('click', function() {
+            // AJAX request to remove background
+            fetch(`/api/room/${roomName}/remove-background/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                }
+            });
+        });
+    }
 });
+
+// CSRFトークン取得用関数
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

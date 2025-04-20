@@ -104,3 +104,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Media files (uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Maximum upload file size (10MB)
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://async-chat-app-tunnel-fy4p4jch.devinapps.com',
+    'https://async-chat-app-tunnel-rw38cyop.devinapps.com',
+    'https://*.devinapps.com'
+]

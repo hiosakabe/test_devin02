@@ -4,6 +4,8 @@ from django.utils import timezone
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    background_type = models.CharField(max_length=20, choices=[('none', 'None'), ('youtube', 'YouTube'), ('upload', 'Upload')], default='none')
+    background_url = models.CharField(max_length=255, blank=True, null=True)  # YouTube URL or uploaded video path
 
     def __str__(self):
         return self.name

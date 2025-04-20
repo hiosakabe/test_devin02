@@ -15,6 +15,17 @@
         
         <div class="chat-layout">
             <div id="chat-screen" class="chat-screen">
+                <!-- ビデオ背景 -->
+                <div id="video-background" class="video-background">
+                    {% if room.background_type == 'youtube' %}
+                        <div id="youtube-player"></div>
+                    {% elif room.background_type == 'upload' %}
+                        <video id="custom-video" autoplay loop muted>
+                            <source src="{{ room.background_url }}" type="video/mp4">
+                            お使いのブラウザは動画の再生に対応していません。
+                        </video>
+                    {% endif %}
+                </div>
                 <!-- ここにメッセージが流れる -->
             </div>
             <div id="chat-history" class="chat-history">
@@ -58,12 +69,35 @@
                 </div>
             </div>
         </div>
+        
+        <div class="video-background-controls">
+            <h3>背景動画設定</h3>
+            <form method="post" enctype="multipart/form-data" class="video-form">
+                {% csrf_token %}
+                <div class="video-option">
+                    <label for="id_youtube_url">YouTube URL:</label>
+                    <input type="url" name="youtube_url" id="id_youtube_url" placeholder="https://www.youtube.com/watch?v=XXXXXXXXXXX">
+                    <button type="button" id="set-youtube" class="btn">設定</button>
+                </div>
+                <div class="video-option">
+                    <label for="id_video">動画アップロード:</label>
+                    <input type="file" name="video" id="id_video" accept="video/mp4,video/webm,video/ogg">
+                    <button type="submit" class="btn">アップロード</button>
+                </div>
+                <div class="video-option">
+                    <button type="button" id="remove-background" class="btn btn-danger">背景を削除</button>
+                </div>
+            </form>
+        </div>
     </div>
 
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script src="/static/js/quiz.js"></script>
     <script>
         // クイズIDをJavaScriptに渡す
         const quizId = "{{ quiz_id }}";
+        const backgroundType = "{{ room.background_type }}";
+        const backgroundUrl = "{{ room.background_url }}";
     </script>
 </body>
 </html>
