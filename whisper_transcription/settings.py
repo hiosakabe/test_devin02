@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-dj#pfv3kn8!mcif18ykofvfr0lf3#(_#qgroe84^ue%o)-goyo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'realtime-transcription-app-tunnel-qgzjhx8u.devinapps.com']
 
 
 # Application definition
