@@ -5,6 +5,10 @@ class TranscriptionApp {
         this.audioStream = null;
         this.isRecording = false;
         this.audioChunks = [];
+        this.audioContext = null;
+        this.analyser = null;
+        this.dataArray = null;
+        this.animationId = null;
         
         this.initializeElements();
         this.initializeWebSocket();
@@ -20,6 +24,9 @@ class TranscriptionApp {
         this.textColor = document.getElementById('textColor');
         this.textSpeed = document.getElementById('textSpeed');
         this.textPosition = document.getElementById('textPosition');
+        this.waveformCanvas = document.getElementById('waveformCanvas');
+        this.levelFill = document.getElementById('levelFill');
+        this.canvasContext = this.waveformCanvas.getContext('2d');
     }
 
     initializeWebSocket() {
@@ -65,6 +72,8 @@ class TranscriptionApp {
                 } 
             });
             
+            this.setupAudioVisualization();
+            
             this.mediaRecorder = new MediaRecorder(this.audioStream, {
                 mimeType: 'audio/webm;codecs=opus'
             });
@@ -87,7 +96,7 @@ class TranscriptionApp {
             this.startBtn.disabled = true;
             this.stopBtn.disabled = false;
             this.startBtn.classList.add('recording');
-            this.updateStatus('🎤 録音中...');
+            this.updateStatus('🎤 録音中... (波形で音声レベルを確認)');
             
         } catch (error) {
             console.error('マイクアクセスエラー:', error);
@@ -99,6 +108,8 @@ class TranscriptionApp {
         if (this.mediaRecorder && this.isRecording) {
             this.mediaRecorder.stop();
             this.audioStream.getTracks().forEach(track => track.stop());
+            
+            this.stopAudioVisualization();
             
             this.isRecording = false;
             this.startBtn.disabled = false;
@@ -215,6 +226,82 @@ class TranscriptionApp {
         while (this.historyContent.children.length > 50) {
             this.historyContent.removeChild(this.historyContent.lastChild);
         }
+    }
+
+    setupAudioVisualization() {
+        try {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            this.analyser = this.audioContext.createAnalyser();
+            
+            const source = this.audioContext.createMediaStreamSource(this.audioStream);
+            source.connect(this.analyser);
+            
+            this.analyser.fftSize = 256;
+            const bufferLength = this.analyser.frequencyBinCount;
+            this.dataArray = new Uint8Array(bufferLength);
+            
+            this.drawWaveform();
+        } catch (error) {
+            console.error('音声可視化の初期化エラー:', error);
+        }
+    }
+
+    stopAudioVisualization() {
+        if (this.animationId) {
+            cancelAnimationFrame(this.animationId);
+            this.animationId = null;
+        }
+        
+        if (this.audioContext) {
+            this.audioContext.close();
+            this.audioContext = null;
+        }
+        
+        this.clearCanvas();
+        this.levelFill.style.width = '0%';
+    }
+
+    drawWaveform() {
+        if (!this.isRecording) return;
+        
+        this.animationId = requestAnimationFrame(() => this.drawWaveform());
+        
+        this.analyser.getByteFrequencyData(this.dataArray);
+        
+        this.clearCanvas();
+        
+        const canvas = this.waveformCanvas;
+        const ctx = this.canvasContext;
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        const barWidth = width / this.dataArray.length;
+        let x = 0;
+        let maxLevel = 0;
+        
+        ctx.fillStyle = '#4CAF50';
+        
+        for (let i = 0; i < this.dataArray.length; i++) {
+            const barHeight = (this.dataArray[i] / 255) * height;
+            maxLevel = Math.max(maxLevel, this.dataArray[i]);
+            
+            const hue = (i / this.dataArray.length) * 120;
+            ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+            
+            ctx.fillRect(x, height - barHeight, barWidth, barHeight);
+            x += barWidth;
+        }
+        
+        const levelPercentage = (maxLevel / 255) * 100;
+        this.levelFill.style.width = levelPercentage + '%';
+    }
+
+    clearCanvas() {
+        const ctx = this.canvasContext;
+        ctx.clearRect(0, 0, this.waveformCanvas.width, this.waveformCanvas.height);
+        
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, this.waveformCanvas.width, this.waveformCanvas.height);
     }
 
     updateStatus(message) {

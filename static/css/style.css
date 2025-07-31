@@ -105,6 +105,50 @@ header p {
     border: 2px solid #333;
 }
 
+.waveform-container {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+#waveformCanvas {
+    width: 100%;
+    height: 60px;
+    background: #111;
+    border-radius: 4px;
+    display: block;
+}
+
+.audio-level-indicator {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.level-bar {
+    flex: 1;
+    height: 8px;
+    background: #333;
+    border-radius: 4px;
+    margin-left: 10px;
+    overflow: hidden;
+}
+
+.level-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #FFC107, #FF5722);
+    width: 0%;
+    transition: width 0.1s ease;
+    border-radius: 4px;
+}
+
 .floating-text {
     position: absolute;
     color: #fff;

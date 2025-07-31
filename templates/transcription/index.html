@@ -22,6 +22,15 @@
         <div class="transcription-area">
             <div class="live-screen" id="liveScreen">
                 <!-- ニコニコ風に流れるテキストがここに表示される -->
+                <div class="waveform-container">
+                    <canvas id="waveformCanvas" width="600" height="100"></canvas>
+                    <div class="audio-level-indicator">
+                        <span>音声レベル: </span>
+                        <div class="level-bar">
+                            <div class="level-fill" id="levelFill"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="history-panel">
