@@ -63,20 +63,36 @@ class TranscriptionApp {
 
     async startRecording() {
         try {
-            this.audioStream = await navigator.mediaDevices.getUserMedia({ 
-                audio: {
-                    sampleRate: 16000,
-                    channelCount: 1,
-                    echoCancellation: true,
-                    noiseSuppression: true
-                } 
-            });
+            let audioConstraints = { audio: true };
+            
+            try {
+                this.audioStream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    } 
+                });
+            } catch (error) {
+                console.log('Enhanced constraints failed, trying basic audio:', error);
+                this.audioStream = await navigator.mediaDevices.getUserMedia(audioConstraints);
+            }
             
             this.setupAudioVisualization();
             
-            this.mediaRecorder = new MediaRecorder(this.audioStream, {
-                mimeType: 'audio/webm;codecs=opus'
-            });
+            let mimeType = 'audio/webm;codecs=opus';
+            if (!MediaRecorder.isTypeSupported(mimeType)) {
+                mimeType = 'audio/webm';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'audio/mp4';
+                    if (!MediaRecorder.isTypeSupported(mimeType)) {
+                        mimeType = '';
+                    }
+                }
+            }
+            
+            this.mediaRecorder = new MediaRecorder(this.audioStream, 
+                mimeType ? { mimeType } : {}
+            );
             
             this.audioChunks = [];
             
@@ -100,7 +116,7 @@ class TranscriptionApp {
             
         } catch (error) {
             console.error('マイクアクセスエラー:', error);
-            this.updateStatus('マイクへのアクセスが拒否されました');
+            this.updateStatus(`マイクアクセスエラー: ${error.name} - ${error.message}`);
         }
     }
 
@@ -231,6 +247,15 @@ class TranscriptionApp {
     setupAudioVisualization() {
         try {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            
+            if (this.audioContext.state === 'suspended') {
+                this.audioContext.resume().then(() => {
+                    console.log('AudioContext resumed for mobile browser');
+                }).catch(error => {
+                    console.error('Failed to resume AudioContext:', error);
+                });
+            }
+            
             this.analyser = this.audioContext.createAnalyser();
             
             const source = this.audioContext.createMediaStreamSource(this.audioStream);
@@ -243,6 +268,7 @@ class TranscriptionApp {
             this.drawWaveform();
         } catch (error) {
             console.error('音声可視化の初期化エラー:', error);
+            this.updateStatus('🎤 録音中... (音声可視化は利用できません)');
         }
     }
 
@@ -304,8 +330,13 @@ class TranscriptionApp {
         ctx.fillRect(0, 0, this.waveformCanvas.width, this.waveformCanvas.height);
     }
 
+    isMobileBrowser() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
     updateStatus(message) {
         this.status.textContent = message;
+        console.log('Status update:', message);
     }
 }
 
